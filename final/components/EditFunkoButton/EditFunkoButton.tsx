@@ -6,11 +6,11 @@ import { EditFunkoProps } from '../../types/funko';
 const EditFunkoButton: React.FC<EditFunkoProps> = ({ funko }) => {
   const [open, setOpen] = useState(false);
   const [formValues, setFormValues] = useState({
-    imageUrl: '',
-    show: '',
-    character: '',
-    yearReleased: '',
-    numberInLine: '',
+    imageUrl: funko.imageUrl,
+    show: funko.tvShow,
+    character: funko.character,
+    yearReleased: funko.yearReleased,
+    numberInLine: funko.numberInLine,
   });
 
   const handleClickOpen = () => setOpen(true);

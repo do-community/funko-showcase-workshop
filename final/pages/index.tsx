@@ -5,7 +5,7 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Header from "../components/Header/Header";
 import FunkoCard from "../components/FunkoCard/FunkoCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IndexProps } from "../types";
 import { Funko } from "../types/funko";
 import AddFunkoButton from "../components/AddFunkoButton/AddFunkoButton";
@@ -24,57 +24,55 @@ export const getServerSideProps: GetServerSideProps<IndexProps> = async () => {
     // db.find({}) or any of the MongoDB Node Driver commands
     const client = await clientPromise;
     const db = client.db("funko-showcase");
-    const funkos = await db
-      .collection("funkos")
-      .find({})
-      .limit(30)
-      .toArray();
+    const funkos = await db.collection("funkos").find({}).limit(30).toArray();
 
     return {
       props: {
         isConnected: true,
-        funkos: JSON.parse(JSON.stringify(funkos)),
+        funkosFetch: JSON.parse(JSON.stringify(funkos)),
       },
     };
   } catch (e) {
     console.error(e);
     return {
-      props: { isConnected: false, funkos: [] },
+      props: { isConnected: false, funkosFetch: [] },
     };
   }
 };
 
 export default function Home({
-  funkos,
+  isConnected,
+  funkosFetch,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [search, setSearch] = useState("");
+  const [funkos, setFunkos] = useState(funkosFetch);
 
-  const filterFunkos = (funko: Funko) => {
-    return (
-      funko.movie_tv_show.toLowerCase().includes(search.toLowerCase()) ||
-      funko.character.toLowerCase().includes(search.toLowerCase())
-    );
-  };
+  useEffect(() => {
+    const filterFunkos = (funko: Funko) => {
+      return (
+        funko?.tvShow?.toLowerCase()?.includes(search.toLowerCase()) ||
+        funko?.character?.toLowerCase()?.includes(search.toLowerCase())
+      );
+    };
 
-  const filteredFunkos = funkos.filter(filterFunkos);
+    const filteredFunkos = funkos.filter(filterFunkos);
+    setFunkos(filteredFunkos);
+  }, [search]);
 
   return (
     <>
       <Head>
         <title>Funko Showcase</title>
-        <meta
-          name="description"
-          content="Funko Showcase."
-        />
+        <meta name="description" content="Funko Showcase." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
       <Container maxWidth="lg">
         <SearchBar setSearch={setSearch} />
-        <AddFunkoButton />
+        <AddFunkoButton setFunkos={setFunkos} />
         <main>
           <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={4}>
-            <FunkoCard funkos={filteredFunkos} />
+            <FunkoCard funkos={funkos} />
           </Box>
         </main>
       </Container>
@@ -94,7 +92,6 @@ export default function Home({
       </footer>
 
       <style jsx>{`
-
         .container {
           min-height: 100vh;
           padding: 0 0.5rem;

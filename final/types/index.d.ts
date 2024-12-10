@@ -1,4 +1,4 @@
 export type IndexProps = {
   isConnected: boolean;
-  funkos: Funko[];
+  funkosFetch: Funko[];
 };

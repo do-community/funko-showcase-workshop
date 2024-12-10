@@ -1,10 +1,13 @@
+import { ObjectId } from "mongodb";
+
 export type Funko = {
-  _id: string;
-  movie_tv_show: string;
+  _id: ObjectId;
+  show: string;
+  tvShow: string;
   character: string;
-  number: number;
-  image: string;
-  year_release: number | string;
+  numberInLine: number;
+  imageUrl: string;
+  yearReleased: number | string;
 };
 export interface FunkoProps {
   funkos: Funko[];

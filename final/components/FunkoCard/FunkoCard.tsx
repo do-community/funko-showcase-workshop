@@ -12,25 +12,25 @@ const FunkoCard: React.FC<FunkoProps> = ({ funkos }) => {
     <>
       {funkos.map((funko) => {
         return (
-          <Card key={funko._id} sx={{ maxWidth: 345 }}>
+          <Card sx={{ maxWidth: 345 }}>
             <CardMedia
               component="img"
               sx={{ height: 140 }}
-              image={funko.image}
+              image={funko.imageUrl}
               alt={funko.character}
             />
             <CardContent>
               <Typography gutterBottom variant="h2" component="div" sx={{ fontSize: '2em', fontWeight: 'bold' }}>
-                {funko.movie_tv_show}
+                {funko.tvShow}
               </Typography>
               <Typography gutterBottom variant="h3" component="div" sx={{ fontSize: '1em' }}>
                 {funko.character}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Released: {funko.year_release}
+                Released: {funko.yearReleased}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Number in Line: {funko.number}
+                Number in Line: {funko.numberInLine}
               </Typography>
             </CardContent>
             <EditFunkoButton funko={funko} />

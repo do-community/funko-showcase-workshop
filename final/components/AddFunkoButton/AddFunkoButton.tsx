@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import axios from 'axios';
+import { Funko } from '../../types/funko';
 
-const AddFunkoButton = ( { onAdd }) => {
+const AddFunkoButton = ({ setFunkos }: { setFunkos: React.Dispatch<React.SetStateAction<Funko[]>> }) => {
   const [open, setOpen] = useState(false);
   const [formValues, setFormValues] = useState({
     imageUrl: '',
@@ -20,10 +21,10 @@ const AddFunkoButton = ( { onAdd }) => {
     setFormValues({ ...formValues, [name]: value });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     try {
-      axios.post('http://localhost:5000/api/funkos', formValues);
-      onAdd(response.data);
+      const response = await axios.post('http://localhost:3000/api/funkos', formValues);
+      setFunkos( (funkos: Funko[]) => [...funkos, response.data]);
       handleClose(); // Close the dialog after submission
     } catch (error) {
       console.error('Error adding Funko:', error);
